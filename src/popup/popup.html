@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        width: 280px;
+        padding: 18px 16px 14px;
+        color: #111;
+        background: #fff;
+      }
+
+      .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 2px; }
+      .logo span { color: #7c3aed; }
+      .tagline { font-size: 11px; color: #9ca3af; margin-bottom: 18px; }
+
+      /* AI status badge */
+      .status-row {
+        display: flex; align-items: flex-start; gap: 9px;
+        padding: 10px 12px; border-radius: 9px;
+        background: #fafafa; border: 1px solid #ebebeb; margin-bottom: 18px;
+      }
+      .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+      .dot.green  { background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,.15); }
+      .dot.amber  { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,.15); }
+      .dot.gray   { background: #9ca3af; }
+      .status-text { font-size: 12px; color: #374151; line-height: 1.45; }
+
+      /* BYOK section */
+      .section-label {
+        font-size: 10px; font-weight: 700; color: #9ca3af;
+        text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px;
+      }
+      input[type="password"] {
+        width: 100%; border: 1px solid #e5e7eb; border-radius: 7px;
+        padding: 8px 10px; font-size: 12px; color: #111; outline: none;
+        background: #fff; transition: border-color .15s, box-shadow .15s;
+      }
+      input[type="password"]:focus {
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+      }
+      .hint { font-size: 10px; color: #9ca3af; margin-top: 5px; line-height: 1.4; }
+
+      .save-btn {
+        width: 100%; margin-top: 10px;
+        background: #7c3aed; color: #fff;
+        border: none; border-radius: 8px; padding: 9px;
+        font-size: 13px; font-weight: 700; cursor: pointer;
+        transition: background .15s;
+      }
+      .save-btn:hover { background: #6d28d9; }
+
+      .saved-msg { font-size: 11px; color: #22c55e; text-align: center; margin-top: 7px; min-height: 15px; }
+
+      hr { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; }
+
+      .footer { font-size: 10px; color: #c4c4c4; text-align: center; line-height: 1.5; }
+      .footer a { color: #c4c4c4; text-decoration: none; }
+      .footer a:hover { color: #7c3aed; }
+    </style>
+  </head>
+  <body>
+    <div class="logo">Prompt<span>Lift</span></div>
+    <div class="tagline">AI Prompt Improver · ChatGPT · Claude · Gemini</div>
+
+    <div class="status-row">
+      <div class="dot gray" id="aiDot"></div>
+      <div class="status-text" id="aiStatus">Checking Chrome AI…</div>
+    </div>
+
+    <div class="section-label">OpenAI Key (optional)</div>
+    <input type="password" id="apiKey" placeholder="sk-…" autocomplete="off" spellcheck="false" />
+    <div class="hint">Stored locally on your device. Used only as a fallback when Chrome AI is unavailable.</div>
+
+    <button class="save-btn" id="saveBtn">Save Settings</button>
+    <div class="saved-msg" id="savedMsg"></div>
+
+    <hr />
+    <div class="footer">
+      v1.0.0 &nbsp;·&nbsp; No data leaves your browser<br />
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

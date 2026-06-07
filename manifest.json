@@ -1,0 +1,77 @@
+{
+  "manifest_version": 3,
+  "name": "PromptLift – AI Prompt Improver",
+  "version": "1.0.0",
+  "description": "One click rewrites your AI prompt into a perfect one. Works on ChatGPT, Claude, Gemini, Grok & 16 more. Free. No account required.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://www.perplexity.ai/*",
+    "https://perplexity.ai/*",
+    "https://copilot.microsoft.com/*",
+    "https://grok.com/*",
+    "https://x.com/*",
+    "https://chat.deepseek.com/*",
+    "https://chat.mistral.ai/*",
+    "https://meta.ai/*",
+    "https://poe.com/*",
+    "https://character.ai/*",
+    "https://you.com/*",
+    "https://huggingface.co/*",
+    "https://phind.com/*",
+    "https://groq.com/*",
+    "https://pi.ai/*",
+    "https://kimi.ai/*",
+    "https://chat.qwen.com/*",
+    "https://coral.cohere.com/*",
+    "https://openrouter.ai/*"
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "PromptLift",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://www.perplexity.ai/*",
+        "https://perplexity.ai/*",
+        "https://copilot.microsoft.com/*",
+        "https://grok.com/*",
+        "https://x.com/*",
+        "https://chat.deepseek.com/*",
+        "https://chat.mistral.ai/*",
+        "https://meta.ai/*",
+        "https://poe.com/*",
+        "https://character.ai/*",
+        "https://you.com/*",
+        "https://huggingface.co/*",
+        "https://phind.com/*",
+        "https://groq.com/*",
+        "https://pi.ai/*",
+        "https://kimi.ai/*",
+        "https://chat.qwen.com/*",
+        "https://coral.cohere.com/*",
+        "https://openrouter.ai/*"
+      ],
+      "js": ["src/content/content.js"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

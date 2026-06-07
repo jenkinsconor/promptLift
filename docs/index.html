@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptLift – Get Better Answers from AI, Every Time</title>
+  <meta name="description" content="One click turns your rough question into a perfect AI prompt. Works on ChatGPT, Claude, Gemini, and 17 more. Free, private, no account needed." />
+  <meta property="og:title" content="PromptLift – Get Better Answers from AI, Every Time" />
+  <meta property="og:description" content="One click turns your rough question into a perfect AI prompt. Free Chrome extension." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple:       #7c3aed;
+      --purple-dark:  #6d28d9;
+      --purple-light: #ede9fe;
+      --purple-mid:   #a78bfa;
+      --text:         #111827;
+      --muted:        #6b7280;
+      --border:       #e5e7eb;
+      --surface:      #f9fafb;
+      --white:        #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-weight: 800; font-size: 18px; letter-spacing: -0.5px; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--purple); }
+    .nav-cta {
+      background: var(--purple); color: var(--white);
+      border: none; border-radius: 8px;
+      padding: 9px 18px; font-size: 14px; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: background .15s, transform .1s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .nav-cta:hover { background: var(--purple-dark); transform: translateY(-1px); }
+
+    /* ── Hero ───────────────────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 24px 60px;
+      text-align: center;
+      background: linear-gradient(180deg, #faf5ff 0%, var(--white) 100%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--purple-light); color: var(--purple);
+      font-size: 12px; font-weight: 700; padding: 5px 12px;
+      border-radius: 999px; margin-bottom: 24px; letter-spacing: 0.3px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -1.5px; margin-bottom: 20px;
+      max-width: 800px; margin-left: auto; margin-right: auto;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--purple), var(--purple-mid));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: clamp(17px, 2.5vw, 20px); color: var(--muted);
+      max-width: 560px; margin: 0 auto 36px; line-height: 1.6;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 20px; }
+    .btn-primary {
+      background: var(--purple); color: var(--white);
+      border: none; border-radius: 12px;
+      padding: 14px 28px; font-size: 16px; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: background .15s, transform .1s, box-shadow .15s;
+      display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 8px 24px rgba(124,58,237,0.35);
+    }
+    .btn-primary:hover { background: var(--purple-dark); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(124,58,237,0.45); }
+    .btn-ghost {
+      background: var(--white); color: var(--text);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 24px; font-size: 16px; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: border-color .15s, background .15s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-ghost:hover { border-color: var(--purple); background: var(--purple-light); }
+    .hero-trust {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
+      font-size: 13px; color: var(--muted); margin-top: 8px;
+    }
+    .hero-trust span { display: flex; align-items: center; gap: 5px; }
+    .hero-trust .dot { width: 5px; height: 5px; border-radius: 50%; background: #22c55e; }
+
+    /* ── Demo card ──────────────────────────────────────────────────────── */
+    .demo-wrap {
+      max-width: 760px; margin: 48px auto 0;
+      background: var(--white); border-radius: 18px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.10), 0 1px 0 var(--border);
+      overflow: hidden;
+    }
+    .demo-bar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 12px 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .demo-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .demo-dot.r { background: #ff5f57; }
+    .demo-dot.y { background: #ffbd2e; }
+    .demo-dot.g { background: #28c840; }
+    .demo-title { font-size: 12px; color: var(--muted); font-weight: 500; margin-left: auto; margin-right: auto; }
+    .demo-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .demo-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 8px; }
+    .demo-label.before { color: #ef4444; }
+    .demo-label.after  { color: #22c55e; }
+    .demo-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 16px;
+      font-size: 14px; line-height: 1.6; color: var(--text);
+    }
+    .demo-box.after { background: #f0fdf4; border-color: #bbf7d0; }
+    .demo-arrow {
+      text-align: center; font-size: 22px; color: var(--purple);
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
+
+    /* ── Platforms ──────────────────────────────────────────────────────── */
+    .platforms { padding: 48px 24px; background: var(--surface); border-top: 1px solid var(--border); }
+    .platforms-label {
+      text-align: center; font-size: 12px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 24px;
+    }
+    .platforms-grid {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+      max-width: 900px; margin: 0 auto;
+    }
+    .platform-chip {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 999px; padding: 7px 16px;
+      font-size: 13px; font-weight: 600; color: var(--muted);
+      transition: all .15s;
+    }
+    .platform-chip:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-light); }
+    .platform-chip.tier1 { color: var(--text); border-color: #d1d5db; }
+
+    /* ── How it works ───────────────────────────────────────────────────── */
+    .section { padding: 80px 24px; }
+    .section-inner { max-width: 1080px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block; background: var(--purple-light); color: var(--purple);
+      font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 999px;
+      margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    h2 {
+      font-size: clamp(28px, 4vw, 42px); font-weight: 900;
+      letter-spacing: -1px; margin-bottom: 16px; line-height: 1.15;
+    }
+    .section-sub { font-size: 18px; color: var(--muted); max-width: 520px; margin-bottom: 48px; }
+
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+    .step {
+      background: var(--white); border: 1px solid var(--border); border-radius: 16px;
+      padding: 28px; position: relative; transition: box-shadow .2s, transform .2s;
+    }
+    .step:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.08); transform: translateY(-3px); }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--purple-light); color: var(--purple);
+      font-size: 16px; font-weight: 900; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .step p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Before / After ─────────────────────────────────────────────────── */
+    .examples { background: var(--surface); }
+    .example-tabs {
+      display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap;
+    }
+    .example-tab {
+      padding: 8px 18px; border-radius: 999px; font-size: 13px; font-weight: 600;
+      border: 1px solid var(--border); background: var(--white); cursor: pointer;
+      transition: all .15s; color: var(--muted);
+    }
+    .example-tab.active { background: var(--purple); color: var(--white); border-color: var(--purple); }
+    .example-content { display: none; }
+    .example-content.active { display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; gap: 20px; }
+    .example-panel { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .example-panel.improved { border-color: #a78bfa; background: #faf5ff; }
+    .example-panel-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.7px; margin-bottom: 12px;
+    }
+    .example-panel-label.b { color: #ef4444; }
+    .example-panel-label.a { color: var(--purple); }
+    .example-text { font-size: 14px; line-height: 1.65; color: var(--text); white-space: pre-wrap; }
+    .example-arrow { font-size: 28px; color: var(--purple); align-self: center; }
+    .example-badge {
+      display: inline-block; background: var(--purple-light); color: var(--purple);
+      font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 999px;
+      margin-bottom: 10px; text-transform: capitalize;
+    }
+
+    /* ── Features grid ──────────────────────────────────────────────────── */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .feature-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px; transition: box-shadow .2s, transform .2s;
+    }
+    .feature-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.07); transform: translateY(-2px); }
+    .feature-icon {
+      font-size: 28px; margin-bottom: 14px; display: block;
+    }
+    .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Intent categories ──────────────────────────────────────────────── */
+    .intents-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+    .intent-chip {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 14px;
+      font-size: 13px; color: var(--muted); font-weight: 500;
+    }
+
+    /* ── Privacy ────────────────────────────────────────────────────────── */
+    .privacy {
+      background: linear-gradient(135deg, var(--purple) 0%, #5b21b6 100%);
+      border-radius: 24px; padding: 56px 48px; text-align: center;
+      color: var(--white); max-width: 860px; margin: 0 auto;
+    }
+    .privacy h2 { color: var(--white); letter-spacing: -0.5px; margin-bottom: 16px; }
+    .privacy p { color: rgba(255,255,255,0.8); font-size: 17px; max-width: 520px; margin: 0 auto 36px; }
+    .privacy-checks { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 40px; }
+    .privacy-check {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.12); border-radius: 999px;
+      padding: 8px 16px; font-size: 14px; font-weight: 600;
+    }
+    .privacy-check .ck { font-size: 16px; }
+    .btn-white {
+      background: var(--white); color: var(--purple);
+      border: none; border-radius: 12px;
+      padding: 14px 28px; font-size: 16px; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+      display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.2); }
+
+    /* ── Final CTA ──────────────────────────────────────────────────────── */
+    .final-cta { padding: 100px 24px; text-align: center; }
+    .final-cta h2 { margin-bottom: 16px; }
+    .final-cta p { font-size: 18px; color: var(--muted); margin-bottom: 36px; }
+
+    /* ── Footer ─────────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border); padding: 32px 24px;
+      text-align: center; font-size: 13px; color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--purple); }
+    .footer-logo { font-weight: 800; font-size: 16px; color: var(--text); margin-bottom: 12px; }
+    .footer-logo span { color: var(--purple); }
+    .footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 16px; }
+
+    /* ── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .hero { padding: 48px 20px 40px; }
+      .example-content.active { grid-template-columns: 1fr; }
+      .example-arrow { transform: rotate(90deg); justify-self: center; }
+      .privacy { padding: 40px 24px; }
+      nav { padding: 12px 16px; }
+      .nav-cta span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<nav>
+  <a href="#" class="nav-logo">Prompt<span>Lift</span></a>
+  <a href="#install" class="nav-cta">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v13M5 9l7 7 7-7"/><path d="M3 20h18"/></svg>
+    <span>Add to Chrome — Free</span>
+  </a>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-badge">
+    ✦ Works on 20+ AI tools
+  </div>
+  <h1>
+    Get <span class="highlight">better answers</span><br />from AI. Every time.
+  </h1>
+  <p class="hero-sub">
+    You're leaving half the value on the table. One click rewrites your question so AI actually understands what you need.
+  </p>
+  <div class="hero-actions">
+    <a href="#install" class="btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v13M5 9l7 7 7-7"/><path d="M3 20h18"/></svg>
+      Add to Chrome — It's Free
+    </a>
+    <a href="#how-it-works" class="btn-ghost">
+      See how it works →
+    </a>
+  </div>
+  <div class="hero-trust">
+    <span><span class="dot"></span> No account required</span>
+    <span><span class="dot"></span> Your data never leaves your device</span>
+    <span><span class="dot"></span> Free forever</span>
+  </div>
+
+  <!-- Demo card -->
+  <div class="demo-wrap">
+    <div class="demo-bar">
+      <div class="demo-dot r"></div>
+      <div class="demo-dot y"></div>
+      <div class="demo-dot g"></div>
+      <span class="demo-title">chatgpt.com</span>
+    </div>
+    <div class="demo-body">
+      <div>
+        <div class="demo-label before">What you typed</div>
+        <div class="demo-box">help me lose weight</div>
+      </div>
+      <div class="demo-arrow">↓</div>
+      <div>
+        <div class="demo-label after">✦ PromptLift improved it</div>
+        <div class="demo-box after">You are a certified personal trainer and sports nutritionist.
+
+Task: Create a realistic, sustainable weight loss plan for me.
+
+Please include:
+- A weekly workout schedule with specific exercises, sets, reps, and rest periods
+- Daily calorie and macro targets based on a moderate deficit
+- Meal timing guidance and 3 easy meal ideas per day
+- The 3 most common mistakes people make and how to avoid them
+
+Constraints: No gym equipment required. Beginner-friendly. Sustainable long-term — not a crash diet.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Platforms ────────────────────────────────────────────────────────────── -->
+<div class="platforms">
+  <div class="platforms-label">Works on every major AI assistant</div>
+  <div class="platforms-grid">
+    <span class="platform-chip tier1">ChatGPT</span>
+    <span class="platform-chip tier1">Claude</span>
+    <span class="platform-chip tier1">Gemini</span>
+    <span class="platform-chip tier1">Perplexity</span>
+    <span class="platform-chip tier1">Grok</span>
+    <span class="platform-chip tier1">Microsoft Copilot</span>
+    <span class="platform-chip">DeepSeek</span>
+    <span class="platform-chip">Le Chat</span>
+    <span class="platform-chip">Meta AI</span>
+    <span class="platform-chip">Poe</span>
+    <span class="platform-chip">Character.AI</span>
+    <span class="platform-chip">You.com</span>
+    <span class="platform-chip">HuggingChat</span>
+    <span class="platform-chip">Phind</span>
+    <span class="platform-chip">Groq</span>
+    <span class="platform-chip">Pi</span>
+    <span class="platform-chip">Kimi</span>
+    <span class="platform-chip">Qwen</span>
+    <span class="platform-chip">Cohere</span>
+    <span class="platform-chip">OpenRouter</span>
+  </div>
+</div>
+
+<!-- ── How it works ─────────────────────────────────────────────────────────── -->
+<section class="section" id="how-it-works">
+  <div class="section-inner">
+    <span class="section-tag">How it works</span>
+    <h2>Three steps.<br />Better answers.</h2>
+    <p class="section-sub">No learning curve, no prompt engineering degree required. Just type and click.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Type your question as normal</h3>
+        <p>Don't overthink it. Type exactly what you'd normally type — a rough idea, a quick question, a few words. PromptLift handles the rest.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Click ✦ PromptLift</h3>
+        <p>The purple button sits in the bottom corner of every AI tool you use. One click rewrites your question with the right structure, context, and constraints.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Review it, then send</h3>
+        <p>See your original and the improved version side by side. Click Apply and get a dramatically better answer. You're always in control — nothing is sent automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Before / After ───────────────────────────────────────────────────────── -->
+<section class="section examples">
+  <div class="section-inner">
+    <span class="section-tag">Before & After</span>
+    <h2>See the difference</h2>
+    <p class="section-sub">Real examples across everyday use cases.</p>
+
+    <div class="example-tabs">
+      <button class="example-tab active" onclick="showExample('fitness')">💪 Fitness</button>
+      <button class="example-tab" onclick="showExample('email')">✉️ Work Email</button>
+      <button class="example-tab" onclick="showExample('cooking')">🍳 Cooking</button>
+      <button class="example-tab" onclick="showExample('travel')">✈️ Travel</button>
+      <button class="example-tab" onclick="showExample('code')">💻 Code</button>
+    </div>
+
+    <div id="ex-fitness" class="example-content active">
+      <div class="example-panel">
+        <div class="example-panel-label b">What you typed</div>
+        <div class="example-text">how to lose weight fast</div>
+      </div>
+      <div class="example-arrow">→</div>
+      <div class="example-panel improved">
+        <div class="example-badge">fitness</div>
+        <div class="example-panel-label a">✦ PromptLift improved it</div>
+        <div class="example-text">You are a certified personal trainer and sports nutritionist.
+
+Task: Create a realistic, sustainable weight loss plan.
+
+Include:
+- Weekly workout schedule with exercises, sets, reps, rest periods
+- Daily calorie targets with a practical meal structure
+- The 3 most common mistakes people make
+
+Constraints: Beginner-friendly. No gym equipment required. No crash diets — I want results that last.</div>
+      </div>
+    </div>
+
+    <div id="ex-email" class="example-content">
+      <div class="example-panel">
+        <div class="example-panel-label b">What you typed</div>
+        <div class="example-text">write email asking my boss for a raise</div>
+      </div>
+      <div class="example-arrow">→</div>
+      <div class="example-panel improved">
+        <div class="example-badge">email</div>
+        <div class="example-panel-label a">✦ PromptLift improved it</div>
+        <div class="example-text">You are an expert business communicator.
+
+Task: Write a professional email requesting a salary increase from my manager.
+
+Structure:
+- Subject line: specific and confident
+- Opening: context-setting — reference my tenure and recent contributions
+- Body: 2–3 concrete achievements with measurable impact
+- The ask: a specific raise amount or percentage
+- Closing: collaborative, not demanding
+
+Tone: Professional, confident, and positive. No filler phrases.</div>
+      </div>
+    </div>
+
+    <div id="ex-cooking" class="example-content">
+      <div class="example-panel">
+        <div class="example-panel-label b">What you typed</div>
+        <div class="example-text">pasta recipe with what's in my fridge</div>
+      </div>
+      <div class="example-arrow">→</div>
+      <div class="example-panel improved">
+        <div class="example-badge">cooking</div>
+        <div class="example-panel-label a">✦ PromptLift improved it</div>
+        <div class="example-text">You are an experienced chef and culinary expert.
+
+Task: Create a pasta recipe using common fridge staples.
+
+Assume I have: pasta, eggs, parmesan, garlic, olive oil, and whatever vegetables are typical in most fridges.
+
+Include:
+- Exact ingredients with measurements
+- Step-by-step method with timing
+- What to do if I'm missing a key ingredient
+- One tip to make it taste restaurant-quality</div>
+      </div>
+    </div>
+
+    <div id="ex-travel" class="example-content">
+      <div class="example-panel">
+        <div class="example-panel-label b">What you typed</div>
+        <div class="example-text">things to do in tokyo</div>
+      </div>
+      <div class="example-arrow">→</div>
+      <div class="example-panel improved">
+        <div class="example-badge">travel</div>
+        <div class="example-panel-label a">✦ PromptLift improved it</div>
+        <div class="example-text">You are an expert travel planner and local culture guide.
+
+Task: Create a 5-day Tokyo itinerary for a first-time visitor.
+
+Organise by day with morning / afternoon / evening blocks. Include:
+- Must-see spots and hidden gems locals love
+- Practical transport tips (IC card, metro lines)
+- One food experience per day — from street food to a sit-down restaurant
+- Budget level: mid-range
+
+Note: I'm interested in culture, food, and local neighbourhoods — not tourist traps.</div>
+      </div>
+    </div>
+
+    <div id="ex-code" class="example-content">
+      <div class="example-panel">
+        <div class="example-panel-label b">What you typed</div>
+        <div class="example-text">fix my javascript code its not working</div>
+      </div>
+      <div class="example-arrow">→</div>
+      <div class="example-panel improved">
+        <div class="example-badge">code</div>
+        <div class="example-panel-label a">✦ PromptLift improved it</div>
+        <div class="example-text">You are an expert software engineer.
+
+Task: Debug and fix the JavaScript code I'm about to share.
+
+Please:
+1. Identify the root cause of the issue, not just the symptom
+2. Explain what was wrong in plain English
+3. Provide the corrected code in a complete, runnable code block
+4. Add a brief inline comment at the fix explaining why the change was needed
+
+Constraints: Don't refactor unrelated code. Keep changes minimal and focused on the bug.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ─────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="section-inner">
+    <span class="section-tag">Features</span>
+    <h2>Built for how people actually use AI</h2>
+    <p class="section-sub">Not just for developers. For everyone.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">🧠</span>
+        <h3>Understands what you mean</h3>
+        <p>PromptLift detects your intent automatically — whether you're asking a question, writing an email, planning a trip, or venting about your day — and applies the right template.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">⚡</span>
+        <h3>Instant. No waiting.</h3>
+        <p>The rule-based engine runs in under 50ms — no API calls, no loading spinner. On supported Chrome + hardware, the optional Chrome AI upgrade polishes results in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🌐</span>
+        <h3>Works everywhere you use AI</h3>
+        <p>ChatGPT, Claude, Gemini, Perplexity, Grok, Copilot, DeepSeek, and 13 more. One extension, every tool.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔒</span>
+        <h3>Completely private</h3>
+        <p>Everything runs in your browser. No server, no account, no data collection. Your prompts are yours — we never see them.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">✨</span>
+        <h3>Reads the room</h3>
+        <p>Mention "for my boss" and it goes formal. Say "for TikTok" and it writes for Gen Z. Drop "make it shorter" and it compresses. Context signals are detected automatically.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🆓</span>
+        <h3>Free. No strings.</h3>
+        <p>No subscription, no sign-up, no credit card. PromptLift is free forever for the core features. Optionally bring your own AI key for cloud-quality rewrites.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 56px;">
+      <p style="font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:16px;">31 intent categories — including</p>
+      <div class="intents-wrap">
+        <span class="intent-chip">💪 Fitness plans</span>
+        <span class="intent-chip">✉️ Work emails</span>
+        <span class="intent-chip">🍳 Recipes</span>
+        <span class="intent-chip">✈️ Travel itineraries</span>
+        <span class="intent-chip">💻 Code & debugging</span>
+        <span class="intent-chip">🎨 Image prompts</span>
+        <span class="intent-chip">📹 Video scripts</span>
+        <span class="intent-chip">🎵 Lyrics & music</span>
+        <span class="intent-chip">💼 Career & resumes</span>
+        <span class="intent-chip">🎤 Interview prep</span>
+        <span class="intent-chip">💰 Finance & budgeting</span>
+        <span class="intent-chip">⚖️ Legal questions</span>
+        <span class="intent-chip">🏥 Health advice</span>
+        <span class="intent-chip">💬 Social media captions</span>
+        <span class="intent-chip">🧮 Math & calculations</span>
+        <span class="intent-chip">🌍 Translation</span>
+        <span class="intent-chip">📊 Data & formulas</span>
+        <span class="intent-chip">🛠️ Troubleshooting</span>
+        <span class="intent-chip">💡 Brainstorming</span>
+        <span class="intent-chip">🧘 Emotional support</span>
+        <span class="intent-chip">🎯 Self-reflection</span>
+        <span class="intent-chip">📝 Summarize anything</span>
+        <span class="intent-chip">✏️ Rewrite & edit</span>
+        <span class="intent-chip">+ more</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Privacy ───────────────────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:0">
+  <div class="section-inner">
+    <div class="privacy">
+      <h2>Your prompts are yours. Always.</h2>
+      <p>In a world where every tool is logging everything, PromptLift is different. It runs entirely in your browser — we have no server to send data to.</p>
+      <div class="privacy-checks">
+        <div class="privacy-check"><span class="ck">✓</span> No account or sign-up</div>
+        <div class="privacy-check"><span class="ck">✓</span> No data collection</div>
+        <div class="privacy-check"><span class="ck">✓</span> No tracking or analytics</div>
+        <div class="privacy-check"><span class="ck">✓</span> Works fully offline</div>
+        <div class="privacy-check"><span class="ck">✓</span> Open source on GitHub</div>
+      </div>
+      <a href="#install" class="btn-white">
+        Add to Chrome — It's Free
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Final CTA ────────────────────────────────────────────────────────────── -->
+<section class="final-cta" id="install">
+  <span class="section-tag">Get started</span>
+  <h2>Stop getting mediocre AI answers.</h2>
+  <p>Join thousands of people getting more out of every AI conversation — in one click.</p>
+  <a href="https://chrome.google.com/webstore" class="btn-primary" style="font-size:17px;padding:16px 32px;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v13M5 9l7 7 7-7"/><path d="M3 20h18"/></svg>
+    Add to Chrome — It's Free
+  </a>
+  <p style="margin-top:16px;font-size:13px;color:var(--muted);">
+    Also available on <a href="#" style="color:var(--purple);text-decoration:none;font-weight:600;">Firefox</a> · <a href="#" style="color:var(--purple);text-decoration:none;font-weight:600;">Edge</a>
+  </p>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">Prompt<span>Lift</span></div>
+  <div class="footer-links">
+    <a href="https://github.com">GitHub</a>
+    <a href="#privacy">Privacy</a>
+    <a href="mailto:hello@promptlift.io">Contact</a>
+  </div>
+  <p>© 2026 PromptLift · Free, open source, private by design.</p>
+</footer>
+
+<script>
+  function showExample(id) {
+    document.querySelectorAll('.example-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.example-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('ex-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

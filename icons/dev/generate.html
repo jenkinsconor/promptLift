@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PromptLift — Icon & Asset Generator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f3f4f6; padding: 40px 24px; color: #111;
+    }
+    h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: #6b7280; margin-bottom: 40px; }
+
+    /* ── Icons ──────────────────────────────────── */
+    .section { margin-bottom: 56px; }
+    .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: #6b7280; margin-bottom: 20px; }
+    .icons-row { display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+    .icon-item { text-align: center; }
+    .icon-label { font-size: 11px; color: #6b7280; margin-top: 8px; font-weight: 600; }
+
+    /* The actual icon SVG inline at each size */
+    .icon-16  svg { width: 16px;  height: 16px; }
+    .icon-48  svg { width: 48px;  height: 48px; }
+    .icon-128 svg { width: 128px; height: 128px; }
+
+    /* ── Promo tiles ─────────────────────────────── */
+    .promo-small {
+      width: 440px; height: 280px;
+      background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+      border-radius: 16px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      color: white; text-align: center; padding: 32px;
+      position: relative; overflow: hidden;
+    }
+    .promo-small::before {
+      content: '';
+      position: absolute; top: -60px; right: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .promo-small::after {
+      content: '';
+      position: absolute; bottom: -80px; left: -40px;
+      width: 240px; height: 240px; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    .promo-logo {
+      font-size: 32px; font-weight: 900; letter-spacing: -1px;
+      margin-bottom: 10px; z-index: 1;
+    }
+    .promo-logo span { opacity: 0.7; }
+    .promo-tagline {
+      font-size: 17px; font-weight: 600; opacity: 0.95;
+      margin-bottom: 20px; z-index: 1; line-height: 1.4;
+    }
+    .promo-sub {
+      font-size: 12px; opacity: 0.7; z-index: 1;
+      letter-spacing: 0.3px;
+    }
+    .promo-star {
+      font-size: 52px; margin-bottom: 14px; z-index: 1;
+      line-height: 1;
+    }
+    .promo-badge {
+      background: rgba(255,255,255,0.18); border-radius: 999px;
+      padding: 6px 16px; font-size: 12px; font-weight: 700;
+      z-index: 1; margin-top: 14px; backdrop-filter: blur(4px);
+    }
+
+    /* ── Large promo ─────────────────────────────── */
+    .promo-large {
+      width: 920px; height: 680px;
+      background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+      border-radius: 20px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      color: white; text-align: center; padding: 60px;
+      position: relative; overflow: hidden;
+    }
+    .promo-large::before {
+      content: ''; position: absolute; top: -100px; right: -100px;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    .promo-large::after {
+      content: ''; position: absolute; bottom: -120px; left: -80px;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+    }
+    .promo-large .promo-logo { font-size: 56px; margin-bottom: 12px; }
+    .promo-large .promo-tagline { font-size: 28px; margin-bottom: 16px; max-width: 540px; }
+    .promo-large .promo-sub { font-size: 16px; }
+    .promo-large .promo-star { font-size: 80px; }
+
+    .before-after {
+      display: flex; align-items: center; gap: 20px;
+      background: rgba(255,255,255,0.1); border-radius: 14px;
+      padding: 20px 28px; margin-top: 32px; z-index: 1;
+      backdrop-filter: blur(8px); max-width: 700px;
+    }
+    .ba-panel { text-align: left; }
+    .ba-label { font-size: 11px; font-weight: 700; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; }
+    .ba-text { font-size: 14px; line-height: 1.5; opacity: 0.95; }
+    .ba-arrow { font-size: 24px; opacity: 0.8; flex-shrink: 0; }
+
+    /* ── Instructions ────────────────────────────── */
+    .instructions {
+      background: white; border-radius: 14px; padding: 28px;
+      max-width: 700px; margin-top: 40px;
+    }
+    .instructions h2 { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
+    .step { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+    .step-num {
+      width: 24px; height: 24px; border-radius: 6px; background: #ede9fe;
+      color: #7c3aed; font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step p { font-size: 14px; color: #374151; line-height: 1.5; }
+    .step strong { color: #111; }
+    a.convert-link {
+      display: inline-block; margin-top: 4px;
+      color: #7c3aed; font-size: 13px; font-weight: 600;
+    }
+
+    .divider { border: none; border-top: 1px solid #e5e7eb; margin: 40px 0; }
+  </style>
+</head>
+<body>
+
+<h1>PromptLift — Brand Assets</h1>
+<p class="subtitle">Open this file in Chrome. Screenshot or export each section below.</p>
+
+<!-- ── App Icons ───────────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">App Icons — save as icon16.png / icon48.png / icon128.png</div>
+  <div class="icons-row">
+
+    <div class="icon-item icon-16">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <rect width="128" height="128" rx="26" fill="#7c3aed"/>
+        <path d="M64 16 C64 16,67 42,67 58 C70 60,72 62,74 64 C72 66,70 68,67 70 C67 86,64 112,64 112 C64 112,61 86,61 70 C58 68,56 66,54 64 C56 62,58 60,61 58 C61 42,64 16,64 16 Z" fill="white"/>
+        <path d="M16 64 C16 64,42 61,58 61 C60 58,62 56,64 54 C66 56,68 58,70 61 C86 61,112 64,112 64 C112 64,86 67,70 67 C68 70,66 72,64 74 C62 72,60 70,58 67 C42 67,16 64,16 64 Z" fill="white"/>
+      </svg>
+      <div class="icon-label">16×16</div>
+    </div>
+
+    <div class="icon-item icon-48">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <rect width="128" height="128" rx="26" fill="#7c3aed"/>
+        <path d="M64 16 C64 16,67 42,67 58 C70 60,72 62,74 64 C72 66,70 68,67 70 C67 86,64 112,64 112 C64 112,61 86,61 70 C58 68,56 66,54 64 C56 62,58 60,61 58 C61 42,64 16,64 16 Z" fill="white"/>
+        <path d="M16 64 C16 64,42 61,58 61 C60 58,62 56,64 54 C66 56,68 58,70 61 C86 61,112 64,112 64 C112 64,86 67,70 67 C68 70,66 72,64 74 C62 72,60 70,58 67 C42 67,16 64,16 64 Z" fill="white"/>
+      </svg>
+      <div class="icon-label">48×48</div>
+    </div>
+
+    <div class="icon-item icon-128">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <rect width="128" height="128" rx="26" fill="#7c3aed"/>
+        <path d="M64 16 C64 16,67 42,67 58 C70 60,72 62,74 64 C72 66,70 68,67 70 C67 86,64 112,64 112 C64 112,61 86,61 70 C58 68,56 66,54 64 C56 62,58 60,61 58 C61 42,64 16,64 16 Z" fill="white"/>
+        <path d="M16 64 C16 64,42 61,58 61 C60 58,62 56,64 54 C66 56,68 58,70 61 C86 61,112 64,112 64 C112 64,86 67,70 67 C68 70,66 72,64 74 C62 72,60 70,58 67 C42 67,16 64,16 64 Z" fill="white"/>
+      </svg>
+      <div class="icon-label">128×128</div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ── Small Promo Tile 440×280 ───────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">Promo Tile — Small (440×280) — screenshot this exactly</div>
+  <div class="promo-small">
+    <div class="promo-star">✦</div>
+    <div class="promo-logo">Prompt<span>Lift</span></div>
+    <div class="promo-tagline">Better AI answers.<br/>One click.</div>
+    <div class="promo-sub">ChatGPT · Claude · Gemini · Grok · Copilot + 15 more</div>
+    <div class="promo-badge">Free Chrome Extension</div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ── Large Promo Tile 920×680 ───────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">Promo Tile — Large (920×680) — screenshot this exactly</div>
+  <div class="promo-large">
+    <div class="promo-star">✦</div>
+    <div class="promo-logo">Prompt<span>Lift</span></div>
+    <div class="promo-tagline">Stop getting mediocre answers from AI.<br/>One click fixes that.</div>
+    <div class="promo-sub">Works on ChatGPT · Claude · Gemini · Perplexity · Grok · Copilot and 14 more</div>
+    <div class="before-after">
+      <div class="ba-panel">
+        <div class="ba-label">You typed</div>
+        <div class="ba-text">help me lose weight</div>
+      </div>
+      <div class="ba-arrow">→</div>
+      <div class="ba-panel">
+        <div class="ba-label">✦ PromptLift improved it</div>
+        <div class="ba-text">You are a certified personal trainer...<br/>Create a sustainable weight loss plan...<br/>Include workouts, macros, and meal timing.</div>
+      </div>
+    </div>
+    <div class="promo-badge" style="margin-top:24px">Free · No account · Private</div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ── How to export ───────────────────────────────────────────────────── -->
+<div class="instructions">
+  <h2>How to export everything</h2>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <p><strong>Icons → PNG:</strong> Right-click each icon above → "Save image as" won't work for inline SVGs.<br/>
+    Instead: go to <a class="convert-link" href="https://cloudconvert.com/svg-to-png" target="_blank">cloudconvert.com/svg-to-png</a>, upload <code>icons/icon.svg</code>, set output size to 128 → download. Repeat for 48 and 16.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <p><strong>Promo tiles → PNG:</strong> Use Chrome DevTools screenshot.<br/>
+    Open DevTools (F12) → Cmd+Shift+P → type "screenshot" → "Capture node screenshot" → click the promo tile element.<br/>
+    Or: use <a class="convert-link" href="https://screenshotone.com" target="_blank">any screenshot tool</a> at exact pixel dimensions.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <p><strong>Extension screenshots (5 needed):</strong><br/>
+    Load the extension in Chrome → open ChatGPT → take screenshots at <strong>1280×800</strong> window size.<br/>
+    Capture: (1) button visible on page, (2) diff overlay open, (3) improved prompt for a work email, (4) improved prompt for cooking, (5) extension popup open.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <p><strong>Demo GIF for landing page:</strong><br/>
+    Record a 15–30 second QuickTime screen recording of using the extension → upload to <a class="convert-link" href="https://ezgif.com/video-to-gif" target="_blank">ezgif.com</a> to convert to GIF → drop into <code>docs/</code> folder and update the landing page hero.</p>
+  </div>
+
+</div>
+
+</body>
+</html>
